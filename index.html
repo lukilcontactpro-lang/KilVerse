@@ -1,74 +1,339 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KilVerse — Jour J</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KiIVerse - Jour J</title>
+
 <style>
-:root{color-scheme:dark;--bg:#090512;--panel:#1a0c2b;--purple:#bd4dff;--pink:#f0a5ff;--text:#fff7ff;--muted:#d3b8e8}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 0%,#4b176e 0%,#1c0b30 38%,#07040d 100%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);overflow-x:hidden}
-main{position:relative;width:min(100%,1100px);text-align:center;padding:clamp(20px,4vw,48px);border:1px solid #bd4dff66;border-radius:28px;background:linear-gradient(145deg,#150920eF,#090512f5);box-shadow:0 0 70px #9b2dce25,inset 0 0 45px #7e22ce12;overflow:hidden}
-main:before,main:after{content:"🌸　✿　🌸　✧　🌸";position:absolute;top:10px;color:#e879f9;font-size:clamp(1rem,3vw,2rem);opacity:.8;letter-spacing:.3em;pointer-events:none}
-main:before{left:10px}main:after{right:10px;transform:scaleX(-1)}
-.eyebrow{letter-spacing:.28em;text-transform:uppercase;color:#e9b8ff;font-weight:800;font-size:.8rem;margin-top:22px}
-h1{font-size:clamp(3rem,9vw,7rem);line-height:.95;margin:16px 0;color:#d98aff;text-shadow:0 0 12px #bd4dff,0 0 42px #a21caf88;font-weight:1000;letter-spacing:.04em}
-.flames{font-size:clamp(1.4rem,3vw,2.4rem);letter-spacing:.35em;filter:drop-shadow(0 0 10px #c026ff);margin:12px 0}
-.subtitle{color:var(--muted);font-size:clamp(1rem,2vw,1.25rem);margin-bottom:32px}
-.timer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,2vw,18px)}
-.unit{padding:clamp(14px,3vw,28px) 6px;border:1px solid #d879ff99;border-radius:20px;background:linear-gradient(145deg,#32164bea,#150a24f5);box-shadow:0 0 22px #a21caf28,inset 0 1px #fff2}
-.number{font-variant-numeric:tabular-nums;font-size:clamp(2.2rem,8vw,6.5rem);font-weight:950;line-height:1;letter-spacing:-.05em;color:#fff;text-shadow:0 0 18px #d879ffbb}
-.label{margin-top:12px;font-size:clamp(.62rem,1.5vw,.95rem);letter-spacing:.15em;color:#e9b8ff;font-weight:850}
-footer{margin-top:26px;color:#d3b8e8;font-size:.95rem}.sakura{font-size:1.2rem;color:#f0a5ff;letter-spacing:.4em;margin-top:18px}
-@media(max-width:560px){main{padding:22px 14px}.timer{grid-template-columns:repeat(2,minmax(0,1fr))}.unit{border-radius:15px}.subtitle{margin-bottom:22px}main:before,main:after{font-size:.9rem}}
+:root {
+  --purple: #b52cff;
+  --pink: #f0a0ff;
+  --dark: rgba(10, 3, 20, .72);
+}
 
-
+* {
+  box-sizing: border-box;
+}
 
 body {
-  background-image: url("./V4.png") !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 35px 18px;
+  font-family: system-ui, sans-serif;
+  color: white;
+  background:
+    linear-gradient(rgba(5, 0, 12, .25), rgba(5, 0, 12, .4)),
+    url("./V4.png") center / cover fixed no-repeat,
+    #090512;
+  overflow-x: hidden;
 }
 
+/* CONTOUR DE FLAMMES VIOLETTES */
+.flame-border {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  border: 3px solid #a020f0;
+  box-shadow:
+    inset 0 0 12px #a020f0,
+    inset 0 0 30px rgba(160, 32, 240, .65),
+    0 0 12px #a020f0,
+    0 0 30px rgba(160, 32, 240, .7);
+}
 
+.flame-border::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  opacity: .9;
+  background:
+    radial-gradient(ellipse at 0% 0%, #d946ff 0%, transparent 25%),
+    radial-gradient(ellipse at 50% 0%, #852cff 0%, transparent 35%),
+    radial-gradient(ellipse at 100% 0%, #d946ff 0%, transparent 25%),
+    radial-gradient(ellipse at 0% 100%, #852cff 0%, transparent 30%),
+    radial-gradient(ellipse at 100% 100%, #d946ff 0%, transparent 30%);
+  filter: blur(12px);
+  animation: aura 2s ease-in-out infinite alternate;
+}
+
+@keyframes aura {
+  from {
+    opacity: .45;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(18px);
+  }
+}
+
+/* PETITES FLAMMES SUR LES BORDS */
+.edge-flames {
+  position: fixed;
+  inset: 0;
+  z-index: 11;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.fire {
+  position: absolute;
+  font-size: clamp(16px, 2vw, 28px);
+  color: #d58aff;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 12px #bd4dff,
+    0 0 24px #8a2be2;
+  animation: flicker .8s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+  from {
+    transform: translateY(3px) scale(.85) rotate(-8deg);
+    opacity: .65;
+  }
+  to {
+    transform: translateY(-5px) scale(1.15) rotate(8deg);
+    opacity: 1;
+  }
+}
+
+/* PANNEAU DU COMPTEUR */
+main {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 780px);
+  padding: clamp(20px, 4vw, 36px);
+  text-align: center;
+  border: 1px solid rgba(210, 115, 255, .75);
+  border-radius: 24px;
+  background: var(--dark);
+  backdrop-filter: blur(5px);
+  box-shadow:
+    0 0 30px rgba(151, 45, 255, .22),
+    inset 0 0 25px rgba(151, 45, 255, .08);
+}
+
+.eyebrow {
+  color: #f0a5ff;
+  font-size: .75rem;
+  font-weight: 850;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 12px 0;
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  line-height: 1;
+  color: #d98aff;
+  text-shadow:
+    0 0 8px #bd4dff,
+    0 0 22px #bd4dff,
+    0 0 42px #8a2be2;
+}
+
+.flames {
+  margin: 18px 0;
+  font-size: 1.7rem;
+  letter-spacing: 12px;
+  filter: drop-shadow(0 0 8px #bd4dff);
+}
+
+.subtitle {
+  margin: 0 0 28px;
+  color: #e8d5ff;
+  font-size: .95rem;
+}
+
+.timer {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.unit {
+  position: relative;
+  padding: 20px 8px 14px;
+  border: 1px solid rgba(208, 119, 255, .8);
+  border-radius: 17px;
+  background: linear-gradient(
+    145deg,
+    rgba(64, 22, 91, .8),
+    rgba(15, 5, 29, .88)
+  );
+  box-shadow:
+    0 0 16px rgba(173, 65, 255, .18),
+    inset 0 0 14px rgba(173, 65, 255, .08);
+}
+
+.number {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 950;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 15px #bd4dff;
+}
+
+.label {
+  margin-top: 8px;
+  color: #f0a5ff;
+  font-size: .7rem;
+  font-weight: 850;
+  letter-spacing: 2px;
+}
+
+/* FLAMME AU-DESSUS DE CHAQUE CASE */
+.unit::before {
+  content: "🔥";
+  display: block;
+  margin-top: -37px;
+  margin-bottom: 12px;
+  font-size: 23px;
+  filter: hue-rotate(40deg) drop-shadow(0 0 9px #b52cff);
+  animation: firePulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes firePulse {
+  from {
+    transform: scale(.9);
+    filter: hue-rotate(35deg) drop-shadow(0 0 5px #b52cff);
+  }
+  to {
+    transform: scale(1.12);
+    filter: hue-rotate(65deg) drop-shadow(0 0 13px #e0a0ff);
+  }
+}
+
+footer {
+  margin-top: 25px;
+  color: #e4c7ff;
+  font-size: .82rem;
+}
+
+@media (max-width: 560px) {
+  body {
+    padding: 25px 12px;
+  }
+
+  main {
+    padding: 24px 14px;
+  }
+
+  .timer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 12px;
+  }
+
+  .subtitle {
+    line-height: 1.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
 </style>
 </head>
+
 <body>
+
+<div class="flame-border"></div>
+
+<div class="edge-flames" aria-hidden="true">
+  <span class="fire" style="top:2%;left:3%">♨</span>
+  <span class="fire" style="top:2%;left:15%">🔥</span>
+  <span class="fire" style="top:2%;left:30%">♨</span>
+  <span class="fire" style="top:2%;left:47%">🔥</span>
+  <span class="fire" style="top:2%;left:65%">♨</span>
+  <span class="fire" style="top:2%;left:82%">🔥</span>
+  <span class="fire" style="top:2%;left:95%">♨</span>
+
+  <span class="fire" style="bottom:2%;left:5%">🔥</span>
+  <span class="fire" style="bottom:2%;left:22%">♨</span>
+  <span class="fire" style="bottom:2%;left:40%">🔥</span>
+  <span class="fire" style="bottom:2%;left:58%">♨</span>
+  <span class="fire" style="bottom:2%;left:76%">🔥</span>
+  <span class="fire" style="bottom:2%;left:93%">♨</span>
+
+  <span class="fire" style="top:20%;left:1%">🔥</span>
+  <span class="fire" style="top:40%;left:1%">♨</span>
+  <span class="fire" style="top:60%;left:1%">🔥</span>
+  <span class="fire" style="top:80%;left:1%">♨</span>
+
+  <span class="fire" style="top:20%;right:1%">♨</span>
+  <span class="fire" style="top:40%;right:1%">🔥</span>
+  <span class="fire" style="top:60%;right:1%">♨</span>
+  <span class="fire" style="top:80%;right:1%">🔥</span>
+</div>
+
 <main>
   <div class="eyebrow">🔥 ✦ Bienvenue dans notre univers ✦ 🔥</div>
-  <h1>KilVerse</h1>
-  <div class="flames">🔥 💜 🌸 💜 🔥</div>
-  <div class="subtitle">Compte à rebours jusqu’au 1er novembre 2026 à minuit · Heure de Paris</div>
-  <section class="timer" aria-label="Temps restant">
-    <div class="unit"><div class="number" id="days">--</div><div class="label">JOURS</div></div>
-    <div class="unit"><div class="number" id="hours">--</div><div class="label">HEURES</div></div>
-    <div class="unit"><div class="number" id="minutes">--</div><div class="label">MINUTES</div></div>
-    <div class="unit"><div class="number" id="seconds">--</div><div class="label">SECONDES</div></div>
-  </section>
-  <div class="sakura">🌸 ✧ 🌸 ✧ 🌸</div>
-  <footer id="status">Les flammes violettes de KilVerse veillent sur le Jour J 💜</footer>
+
+  <h1>KiIVerse</h1>
+
+  <div class="flames">🔥 💜 🔥 💜 🔥</div>
+
+  <p class="subtitle">
+    Compte à rebours jusqu’au 1er novembre 2026 à minuit · Heure de Paris
+  </p>
+
+  <div class="timer">
+    <div class="unit">
+      <div class="number" id="days">--</div>
+      <div class="label">JOURS</div>
+    </div>
+
+    <div class="unit">
+      <div class="number" id="hours">--</div>
+      <div class="label">HEURES</div>
+    </div>
+
+    <div class="unit">
+      <div class="number" id="minutes">--</div>
+      <div class="label">MINUTES</div>
+    </div>
+
+    <div class="unit">
+      <div class="number" id="seconds">--</div>
+      <div class="label">SECONDES</div>
+    </div>
+  </div>
+
+  <footer>
+    🔥 Les flammes violettes de KiIVerse veillent sur le Jour J 💜 🔥
+  </footer>
 </main>
+
 <script>
-const target = new Date("2026-11-01T00:00:00+01:00").getTime();
-const pad = n => String(n).padStart(2,"0");
-function update(){
-  let diff = target - Date.now();
-  if(diff <= 0){
-    ["days","hours","minutes","seconds"].forEach(id=>document.getElementById(id).textContent="00");
-    document.getElementById("status").textContent="C’est le Jour J ! Bienvenue au grand rendez-vous KilVerse 💜";
-    return;
-  }
-  const days=Math.floor(diff/86400000); diff%=86400000;
-  const hours=Math.floor(diff/3600000); diff%=3600000;
-  const minutes=Math.floor(diff/60000); diff%=60000;
-  const seconds=Math.floor(diff/1000);
-  document.getElementById("days").textContent=days;
-  document.getElementById("hours").textContent=pad(hours);
-  document.getElementById("minutes").textContent=pad(minutes);
-  document.getElementById("seconds").textContent=pad(seconds);
+function update() {
+  // Minuit à Paris le 1er novembre 2026
+  const target = new Date("2026-11-01T00:00:00+01:00").getTime();
+  const now = Date.now();
+  const distance = Math.max(0, target - now);
+
+  const days = Math.floor(distance / 86400000);
+  const hours = Math.floor((distance % 86400000) / 3600000);
+  const minutes = Math.floor((distance % 3600000) / 60000);
+  const seconds = Math.floor((distance % 60000) / 1000);
+
+  document.getElementById("days").textContent = String(days).padStart(2, "0");
+  document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+  document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+  document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
 }
-update(); setInterval(update,1000);
+
+update();
+setInterval(update, 1000);
 </script>
+
 </body>
 </html>
