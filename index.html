@@ -389,6 +389,144 @@ setInterval(update, 1000);
   }, 100);
 })();
 </script>
+  
+<style>
+  .kiiverse-lightning {
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .kiiverse-bolt {
+    position: absolute;
+    width: 4px;
+    height: var(--bolt-height, 180px);
+    opacity: 0;
+    transform: rotate(var(--bolt-angle, 15deg));
+    transform-origin: top center;
+
+    background: linear-gradient(
+      to bottom,
+      #ffffff,
+      #e9a2ff 20%,
+      #bd39ff 60%,
+      transparent
+    );
+
+    box-shadow:
+      0 0 8px #e9a2ff,
+      0 0 18px #c000ff,
+      0 0 35px #8b00ff;
+
+    clip-path: polygon(
+      50% 0, 100% 0, 38% 48%,
+      75% 48%, 0 100%, 28% 56%, 0 56%
+    );
+
+    animation: kiiverse-strike 0.45s ease-out forwards;
+  }
+
+  .kiiverse-flash {
+    position: absolute;
+    inset: 0;
+    background: rgba(173, 50, 255, 0.16);
+    animation: kiiverse-flash 0.45s ease-out forwards;
+  }
+
+  @keyframes kiiverse-strike {
+    0% {
+      opacity: 0;
+      filter: brightness(1);
+    }
+    10% {
+      opacity: 1;
+      filter: brightness(2);
+    }
+    25% {
+      opacity: 0.25;
+    }
+    40% {
+      opacity: 1;
+      filter: brightness(2.5);
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes kiiverse-flash {
+    0% { opacity: 0; }
+    12% { opacity: 1; }
+    35% { opacity: 0.15; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kiiverse-bolt,
+    .kiiverse-flash {
+      animation-duration: 0.15s;
+    }
+  }
+</style>
+
+<div class="kiiverse-lightning" id="kiiverseLightning"></div>
+
+<script>
+(() => {
+  const layer = document.getElementById("kiiverseLightning");
+  if (!layer) return;
+
+  function createLightning() {
+    const bolt = document.createElement("div");
+    bolt.className = "kiiverse-bolt";
+
+    // Position aléatoire sur tout l'écran
+    bolt.style.left = Math.random() * 100 + "%";
+    bolt.style.top = Math.random() * 55 + "%";
+    bolt.style.setProperty(
+      "--bolt-height",
+      (100 + Math.random() * 220) + "px"
+    );
+    bolt.style.setProperty(
+      "--bolt-angle",
+      (-25 + Math.random() * 50) + "deg"
+    );
+
+    layer.appendChild(bolt);
+
+    // Flash violet occasionnel
+    if (Math.random() < 0.7) {
+      const flash = document.createElement("div");
+      flash.className = "kiiverse-flash";
+      layer.appendChild(flash);
+      setTimeout(() => flash.remove(), 500);
+    }
+
+    setTimeout(() => bolt.remove(), 500);
+  }
+
+  // Premier éclair après un délai aléatoire
+  function scheduleLightning() {
+    const delay = 8000 + Math.random() * 5000;
+
+    setTimeout(() => {
+      createLightning();
+      scheduleLightning();
+    }, delay);
+  }
+
+  scheduleLightning();
+})();
+</script>
+</body>
+</html>
+
 </body>
 </html>
 
