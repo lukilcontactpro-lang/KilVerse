@@ -335,5 +335,62 @@ update();
 setInterval(update, 1000);
 </script>
 
+<script>
+(() => {
+  let audioContext;
+
+  function playTick() {
+    try {
+      audioContext ??= new (
+        window.AudioContext || window.webkitAudioContext
+      )();
+
+      if (audioContext.state === "suspended") {
+        audioContext.resume();
+      }
+
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+
+      gain.gain.setValueAtTime(0.12, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext.currentTime + 0.055
+      );
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.055);
+    } catch (error) {
+      console.warn("Son du chrono indisponible", error);
+    }
+  }
+
+  let previousSecond = null;
+
+  setInterval(() => {
+    const secondsElement = document.querySelector(
+      "#seconds, #secondes, [data-unit='seconds']"
+    );
+
+    if (!secondsElement) return;
+
+    const currentSecond = secondsElement.textContent.trim();
+
+    if (currentSecond !== previousSecond) {
+      previousSecond = currentSecond;
+      playTick();
+    }
+  }, 100);
+})();
+</script>
+</body>
+</html>
+
 </body>
 </html>
